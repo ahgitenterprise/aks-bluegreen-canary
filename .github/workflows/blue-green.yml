@@ -17,7 +17,7 @@ env:
   ACR_NAME: ahaksregistry.azurecr.io
   ACR_REPO_NAME: ahaksregistry.azurecr.io/docker-java-app
   ARTIFACT_NAME: docker-java-app
-  RESOURCE_GROUP: kube-argo-rg
+  RESOURCE_GROUP: kub-argo-rg
   AKS_CLUSTER_NAME: kub-argo-cluster
   
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
