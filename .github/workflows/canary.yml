@@ -42,7 +42,7 @@ jobs:
       - name: Deploy app
         uses: azure/k8s-deploy@v1.3
         with:
-          namespace: default
+          namespace: bluegreen
           manifests: |
             ./kubernetes/service.yaml
             ./kubernetes/blue-deploy.yaml
@@ -78,7 +78,7 @@ jobs:
         uses: azure/k8s-deploy@v1.3
         if: ${{ success() }}
         with:
-          namespace: default
+          namespace: bluegreen
           manifests: |
             ./kubernetes/service.yaml
             ./kubernetes/green-deploy.yaml
@@ -94,7 +94,7 @@ jobs:
         uses: azure/k8s-deploy@v1.3
         if: ${{ failure() }}
         with:
-          namespace: default
+          namespace: bluegreen
           manifests: |
             ./kubernetes/service.yaml
             ./kubernetes/blue-deploy.yaml
