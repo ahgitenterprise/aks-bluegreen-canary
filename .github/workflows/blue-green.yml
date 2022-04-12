@@ -42,14 +42,14 @@ jobs:
       
       # Runs a set of commands using the runners shell
       - name: Deploy app
-        uses: azure/k8s-deploy@v1.4
+        uses: azure/k8s-deploy@v1.3
         with:
-          namespace: bluegreen
+          namespace: default
           manifests: |
             ./kubernetes/service.yaml
             ./kubernetes/blue-deploy.yaml
-          # images: |
-          #   ahaksregistry.azurecr.io/blue-nginx:1
+          images: |
+            ahaksregistry.azurecr.io/green-nginx:1
           strategy: blue-green
           traffic-split-method: pod
           action: deploy  #deploy is the default; we will later use this to promote/reject
@@ -75,29 +75,29 @@ jobs:
           resource-group: ${{ env.RESOURCE_GROUP }}
 
       - name: Promote App
-        uses: azure/k8s-deploy@v1.4
+        uses: azure/k8s-deploy@v1.3
         if: ${{ success() }}
         with:
-          namespace: bluegreen
+          namespace: default
           manifests: |
             ./kubernetes/service.yaml
             ./kubernetes/green-deploy.yaml
-          # images: |
-          #   ahaksregistry.azurecr.io/green-nginx:1
+          images: |
+            ahaksregistry.azurecr.io/green-nginx:1
           strategy: blue-green
           traffic-split-method: pod
           action: promote  #deploy is the default; we will later use this to promote/reject
 
       - name: Reject App
-        uses: azure/k8s-deploy@v1.4
+        uses: azure/k8s-deploy@v1.3
         if: ${{ failure() }}
         with:
-          namespace: bluegreen
+          namespace: default
           manifests: |
             ./kubernetes/service.yaml
             ./kubernetes/blue-deploy.yaml
-          # images: |
-          #   ahaksregistry.azurecr.io/blue-nginx:1
+          images: |
+            ahaksregistry.azurecr.io/green-nginx:1
           strategy: blue-green
           traffic-split-method: pod
           action: reject  #deploy is the default; we will later use this to promote/reject
