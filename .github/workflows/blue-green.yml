@@ -48,8 +48,8 @@ jobs:
           manifests: |
             ./kubernetes/service.yaml
             ./kubernetes/blue-deploy.yaml
-          images: |
-            ahaksregistry.azurecr.io/blue-nginx:1
+          # images: |
+          #   ahaksregistry.azurecr.io/blue-nginx:1
           strategy: blue-green
           traffic-split-method: pod
           action: deploy  #deploy is the default; we will later use this to promote/reject
@@ -82,8 +82,8 @@ jobs:
           manifests: |
             ./kubernetes/service.yaml
             ./kubernetes/green-deploy.yaml
-          images: |
-            ahaksregistry.azurecr.io/green-nginx:1
+          # images: |
+          #   ahaksregistry.azurecr.io/green-nginx:1
           strategy: blue-green
           traffic-split-method: pod
           action: promote  #deploy is the default; we will later use this to promote/reject
@@ -96,8 +96,8 @@ jobs:
           manifests: |
             ./kubernetes/service.yaml
             ./kubernetes/blue-deploy.yaml
-          images: |
-            ahaksregistry.azurecr.io/blue-nginx:1
+          # images: |
+          #   ahaksregistry.azurecr.io/blue-nginx:1
           strategy: blue-green
           traffic-split-method: pod
           action: reject  #deploy is the default; we will later use this to promote/reject
