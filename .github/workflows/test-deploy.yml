@@ -42,14 +42,48 @@ jobs:
       
       # Runs a set of commands using the runners shell
       - name: Deploy app
-        uses: azure/k8s-deploy@v1.3
+        uses: azure/k8s-deploy@v1.4
         with:
           namespace: bluegreen
           manifests: |
             ./kubernetes/service.yaml
             ./kubernetes/blue-deploy.yaml
           images: |
-            ahaksregistry.azurecr.io/green-nginx:1
+            ahaksregistry.azurecr.io/blue-nginx:1
           strategy: blue-green
           traffic-split-method: pod
           action: deploy  #deploy is the default; we will later use this to promote/reject
+
+  approveapp:
+    runs-on: ubuntu-latest
+    needs: deployapp
+    environment: akspromotion
+    steps:
+      - run: echo asked for approval
+
+  promotereject:
+    runs-on: ubuntu-latest
+    needs: approveapp
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Set cluster context
+        uses: azure/aks-set-context@v1
+        with:
+          creds: '${{ secrets.AZURE_CREDENTIALS }}'
+          cluster-name: ${{ env.AKS_CLUSTER_NAME }}
+          resource-group: ${{ env.RESOURCE_GROUP }}
+
+      - name: Promote App
+        uses: azure/k8s-deploy@v1.3
+        if: ${{ success() }}
+        with:
+          namespace: default
+          manifests: |
+            ./kubernetes/service.yaml
+            ./kubernetes/green-deploy.yaml
+          images: |
+            ahaksregistry.azurecr.io/green-nginx:1
+          strategy: blue-green
+          traffic-split-method: pod
+          action: promote  #deploy is the default; we will later use this to promote/reject
