@@ -12,17 +12,30 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-apiVersion: v1
-kind: Service
-metadata: 
-  name: nginx
-  labels: 
-    app: nginx
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-deployment
 spec:
-  ports:
-    - name: http
-      port: 80
-      targetPort: 80
-  selector: 
-    app: nginx
-  type: NodePort
+  replicas: 3
+  selector:
+      matchLabels:
+        app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers: 
+        - name: nginx
+          image: testimage/yellow-nginx:1
+          ports:
+            - name: http
+              containerPort: 80
+          resources:
+            requests:
+              cpu: 200m
+              memory: 200Mi
+            limits:
+              cpu: 500m
+              memory: 500Mi
