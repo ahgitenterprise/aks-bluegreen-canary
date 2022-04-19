@@ -75,7 +75,7 @@ jobs:
           resource-group: ${{ env.RESOURCE_GROUP }}
 
       - name: Promote App
-        uses: Azure/k8s-deploy@v3.1
+        uses: Azure/k8s-deploy
         if: ${{ success() }}
         with:
           namespace: blue-green
