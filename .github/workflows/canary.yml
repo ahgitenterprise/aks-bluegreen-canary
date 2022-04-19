@@ -14,8 +14,8 @@ on:
   workflow_dispatch:
 
 env:
-  ACR_NAME: ahaksregistry.azurecr.io
-  ACR_REPO_NAME: ahaksregistry.azurecr.io/docker-java-app
+  ACR_NAME: ahregistry01.azurecr.io
+  ACR_REPO_NAME: ahregistry01.azurecr.io/docker-java-app
   ARTIFACT_NAME: docker-java-app
   RESOURCE_GROUP: kub-argo-rg
   AKS_CLUSTER_NAME: kub-argo-cluster
@@ -42,12 +42,12 @@ jobs:
       - name: Deploy app
         uses: azure/k8s-deploy@v1.3
         with:
-          namespace: bluegreen
+          namespace: blue-green
           manifests: |
             ./kubernetes/service.yaml
             ./kubernetes/blue-deploy.yaml
           images: |
-            ahaksregistry.azurecr.io/blue-nginx:1
+            ahregistry01.azurecr.io/blue-nginx:1
           strategy: canary
           traffic-split-method: pod
           action: deploy  #deploy is the default; we will later use this to promote/reject
@@ -78,12 +78,12 @@ jobs:
         uses: azure/k8s-deploy@v1.3
         if: ${{ success() }}
         with:
-          namespace: bluegreen
+          namespace: blue-green
           manifests: |
             ./kubernetes/service.yaml
             ./kubernetes/green-deploy.yaml
           images: |
-            ahaksregistry.azurecr.io/green-nginx:1
+            ahregistry01.azurecr.io/green-nginx:1
           strategy: canary
           traffic-split-method: pod
           action: promote  #deploy is the default; we will later use this to promote/reject
@@ -94,12 +94,12 @@ jobs:
         uses: azure/k8s-deploy@v1.3
         if: ${{ failure() }}
         with:
-          namespace: bluegreen
+          namespace: blue-green
           manifests: |
             ./kubernetes/service.yaml
             ./kubernetes/green-deploy.yaml
           images: |
-            ahaksregistry.azurecr.io/green-nginx:1
+            ahregistry01.azurecr.io/green-nginx:1
           strategy: canary
           traffic-split-method: pod
           action: reject  #deploy is the default; we will later use this to promote/reject
