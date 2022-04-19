@@ -28,7 +28,9 @@ spec:
     spec:
       containers: 
         - name: nginx
-          image: testimage/yellow-nginx:1
+          image: ahaksregistry.azurecr.io/yellow-nginx:1
+          # image: ahaksregistry.azurecr.io/green-nginx:1
+          # image: ahaksregistry.azurecr.io/blue-nginx:1
           ports:
             - name: http
               containerPort: 80
